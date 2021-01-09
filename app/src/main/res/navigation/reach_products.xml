@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/reach_products.app.xml"
+	app:startDestination="@id/reachProductsFragment">
+
+	<fragment
+		android:id="@+id/reachProductsFragment"
+		android:name="com.babestudios.reachproducts.ui.products.ProductsFragment"
+		android:label="ReachProducts.appFragment"
+		tools:layout="@layout/fragment_products">
+
+		<action
+			android:id="@+id/action_reachProductsFragment_to_reachProductsDetailsFragment"
+			app:destination="@id/reachProductsDetailsFragment"
+			app:enterAnim="@anim/right_slide_in"
+			app:exitAnim="@anim/left_slide_out"
+			app:popEnterAnim="@anim/left_slide_in"
+			app:popExitAnim="@anim/right_slide_out" />
+	</fragment>
+
+	<fragment
+		android:id="@+id/reachProductsDetailsFragment"
+		android:name="com.babestudios.reachproducts.ui.details.ReachProductsDetailsFragment"
+		android:label="ReachProductsDetailsFragment"
+		tools:layout="@layout/fragment_reach_products_details">
+	</fragment>
+
+</navigation>
