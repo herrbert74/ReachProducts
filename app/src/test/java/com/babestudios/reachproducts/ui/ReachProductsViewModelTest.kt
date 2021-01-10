@@ -2,19 +2,18 @@ package com.babestudios.reachproducts.ui
 
 import androidx.lifecycle.SavedStateHandle
 import com.babestudios.reachproducts.data.network.ReachProductsRepositoryContract
-import com.babestudios.reachproducts.data.network.productDtoMapper
-import com.babestudios.reachproducts.data.network.dto.ProductDto
-import com.babestudios.reachproducts.model.Product
+import com.babestudios.reachproducts.data.network.dto.ProductsResponseDto
+import com.babestudios.reachproducts.data.network.dto.productsResponseDtoMapper
+import com.babestudios.reachproducts.data.res.StringResourceHelperContract
+import com.babestudios.reachproducts.ext.loadJson
+import com.babestudios.reachproducts.model.ProductsResponse
 import com.babestudios.reachproducts.navigation.ReachProductsNavigationContract
-import com.babestudios.base.ext.loadJson
 import com.github.michaelbull.result.Ok
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -26,19 +25,29 @@ class ReachProductsViewModelTest : BaseViewModelTest() {
 
 	private val reachProductsNavigation = mockk<ReachProductsNavigationContract>()
 
-	private var mappedResponse :List<Product> = emptyList()
+	private val stringResourceHelper = mockk<StringResourceHelperContract>()
+
+	private var mappedResponse :ProductsResponse= ProductsResponse()
 
 	private var viewModel: ReachProductsViewModel? = null
 
 	@Before
 	fun setUp() {
 		val response = "products_response".loadJson()
-		val gson = Gson()
-		val itemType = object : TypeToken<List<ProductDto>>() {}.type
-		val responseDto = gson.fromJson<List<ProductDto>>(response, itemType)
-		mappedResponse = productDtoMapper(responseDto)
+		val responseDto = Gson().fromJson(response, ProductsResponseDto::class.java)
+		mappedResponse = productsResponseDtoMapper.invoke(responseDto)
 		every {
-			reachProductsNavigation.mainToProductDetails(any())
+			stringResourceHelper.getFreeDiscountText(any())
+		} answers {
+			""
+		}
+		every {
+			stringResourceHelper.getQuantityDiscountText(any(), any())
+		} answers {
+			""
+		}
+		every {
+			reachProductsNavigation.mainToProductDetails()
 		} answers
 				{
 					Exception("")
@@ -54,13 +63,14 @@ class ReachProductsViewModelTest : BaseViewModelTest() {
 	@Test
 	fun `when loadProducts is called then liveData is posted`() {
 		viewModel?.loadProducts()
-		(viewModel?.productsLiveData?.value as Ok).value.size shouldBe 63
+		(viewModel?.productsLiveData?.value as Ok).value.products.size shouldBe 3
 	}
 
 	private fun reachProductsViewModel(): ReachProductsViewModel {
 		return ReachProductsViewModel(
 			reachProductsRepositoryContract,
 			reachProductsNavigation,
+			stringResourceHelper,
 			SavedStateHandle()
 		)
 	}

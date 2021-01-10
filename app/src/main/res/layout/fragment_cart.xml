@@ -7,16 +7,26 @@
 	android:orientation="vertical">
 
 	<androidx.appcompat.widget.Toolbar
-		android:id="@+id/tbProductDetails"
+		android:id="@+id/tbCart"
 		android:layout_width="match_parent"
 		android:layout_height="?attr/actionBarSize"
 		android:background="?attr/colorPrimary"
-		android:theme="@style/MyThemeOverlay.ActionBar"
-		app:popupTheme="@style/MyThemeOverlay.ActionBar"
 		app:titleTextColor="@android:color/white" />
 
+	<TextView
+		android:id="@+id/lblCartTotalAmount"
+		style="@style/Text.H6"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/viewMargin"
+		android:layout_marginTop="@dimen/viewMargin"
+		android:layout_marginEnd="@dimen/viewMargin"
+		android:layout_marginBottom="@dimen/screenMargin"
+		android:textAlignment="center"
+		tools:text="Total amount: 23.00"/>
+
 	<com.babestudios.base.view.MultiStateView
-		android:id="@+id/msvProductDetails"
+		android:id="@+id/msvCart"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -26,7 +36,7 @@
 		app:msv_viewState="content">
 
 		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/rvProductDetails"
+			android:id="@+id/rvCart"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:backgroundTint="@color/white"
@@ -34,7 +44,7 @@
 			android:scrollbars="vertical" />
 
 		<LinearLayout
-			android:id="@+id/llProductDetailsCannotConnect"
+			android:id="@+id/llCartCannotConnect"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="bottom"
@@ -56,7 +66,7 @@
 				android:textColor="@android:color/white" />
 
 			<com.google.android.material.button.MaterialButton
-				android:id="@+id/btnProductDetailsReload"
+				android:id="@+id/btnCartReload"
 				style="@style/Button.Text"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

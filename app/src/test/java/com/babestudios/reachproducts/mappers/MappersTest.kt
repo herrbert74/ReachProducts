@@ -1,47 +1,27 @@
 package com.babestudios.reachproducts.mappers
 
-import com.babestudios.reachproducts.data.network.productDtoMapper
-import com.babestudios.reachproducts.data.network.dto.ProductDto
-import com.babestudios.reachproducts.data.network.dto.Status
-import com.babestudios.reachproducts.model.Product
-import com.babestudios.base.ext.loadJson
+import com.babestudios.reachproducts.data.network.dto.ProductsResponseDto
+import com.babestudios.reachproducts.data.network.dto.productsResponseDtoMapper
+import com.babestudios.reachproducts.ext.loadJson
+import com.babestudios.reachproducts.model.ProductsResponse
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import io.kotest.matchers.shouldBe
 import org.junit.Before
 import org.junit.Test
 
 class MappersTest {
 
-	private var mappedResponse :List<Product> = emptyList()
+	private var mappedResponse: ProductsResponse = ProductsResponse()
 
 	@Before
 	fun setup() {
 		val response = "products_response".loadJson()
-		val gson = Gson()
-		val itemType = object : TypeToken<List<ProductDto>>() {}.type
-		val responseDto = gson.fromJson<List<ProductDto>>(response, itemType)
-		mappedResponse = productDtoMapper(responseDto)
+		val responseDto = Gson().fromJson(response, ProductsResponseDto::class.java)
+		mappedResponse = productsResponseDtoMapper.invoke(responseDto)
 	}
 
 	@Test
 	fun `when there is a response then name is mapped`() {
-		mappedResponse[0].name shouldBe "Walter White"
+		mappedResponse.products[0].name shouldBe "Express Lipstick"
 	}
-
-	@Test
-	fun `when there is a response then occupation is mapped`() {
-		mappedResponse[0].occupation shouldBe "High School Chemistry Teacher, Meth King Pin"
-	}
-
-	@Test
-	fun `when there is a response then status is mapped`() {
-		mappedResponse[0].status shouldBe Status.Unknown
-	}
-
-	@Test
-	fun `when there is a response then appearance is mapped`() {
-		mappedResponse[0].appearance.replace(" ", "") shouldBe "1,2,3,4,5"
-	}
-
 }

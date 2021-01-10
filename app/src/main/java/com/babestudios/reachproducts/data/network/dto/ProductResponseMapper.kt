@@ -1,27 +1,31 @@
 package com.babestudios.reachproducts.data.network.dto
 
+import com.babestudios.reachproducts.model.Discount
 import com.babestudios.reachproducts.model.Product
+import java.math.BigDecimal
+import java.math.RoundingMode
 
-inline fun mapProductDto(
+fun mapProductDto(
 	input: ProductDto,
-	occupationMapper: (List<String>) -> String,
-	appearanceMapper: (List<Int>?) -> String
 ): Product {
+	val price = BigDecimal(input.price).setScale(2, RoundingMode.HALF_EVEN)
 	return Product(
-		input.char_id,
+		input.id,
 		input.name,
-		occupationMapper(input.occupation),
-		input.img ?: "",
-		input.status ?: Status.Unknown,
-		input.nickname ?: "",
-		appearanceMapper(input.appearance)
+		input.image,
+		price,
+		mapProductToDiscount(input.id, price)
 	)
 }
 
-fun mapOccupation(occupationList: List<String>): String {
-	return occupationList.joinToString(", ")
-}
-
-fun mapAppearance(appearanceList: List<Int>?): String {
-	return appearanceList?.joinToString(", ") ?: ""
+fun mapProductToDiscount(id: String, price: BigDecimal): Discount {
+	return when(id) {
+		"LIPSTICK" -> Discount.GetFreeDiscount(2, price)
+		"EYELINER" -> Discount.QuantityDiscount(
+			3,
+			BigDecimal("30.00"),
+			price
+		)
+		else -> Discount.NoDiscount(price)
+	}
 }

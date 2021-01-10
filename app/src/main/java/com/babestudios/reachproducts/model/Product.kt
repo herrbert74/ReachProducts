@@ -1,13 +1,20 @@
 package com.babestudios.reachproducts.model
 
-import com.babestudios.reachproducts.data.network.dto.Status
+import java.math.BigDecimal
 
 data class Product(
-	val id: Long = 0L,
-	val name: String = "",
-	val occupation: String = "",
-	val img: String = "",
-	val status: Status = Status.Unknown,
-	val nickname: String = "",
-	val appearance: String = "",
-)
+    val id: String = "",
+    val name: String = "",
+    val image: String = "",
+    val price: BigDecimal = BigDecimal.ZERO,
+    val discount: Discount = Discount.NoDiscount(price),
+    val discountText: String? = null,
+) {
+    override fun equals(other: Any?): Boolean {
+        return (other as Product).id == id
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+}

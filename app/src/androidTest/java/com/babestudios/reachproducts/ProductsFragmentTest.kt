@@ -7,6 +7,7 @@ import com.babestudios.reachproducts.ui.ReachProductsActivity
 import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertListItemCount
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.interaction.BaristaListInteractions
+import com.schibsted.spain.barista.interaction.BaristaMenuClickInteractions.clickMenu
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -26,13 +27,14 @@ class ProductsFragmentTest {
     @Test
     fun populateRecyclerViewTest() {
         launchActivity<ReachProductsActivity>()
-        assertListItemCount(R.id.rvProducts, 63)
+        assertListItemCount(R.id.rvProducts, 3)
     }
 
     @Test
     fun startDetailsTest() {
         launchActivity<ReachProductsActivity>()
         BaristaListInteractions.clickListItem(R.id.rvProducts, 0)
-        assertDisplayed(R.id.lblProductDetailsItemName, "Walter White")
+        clickMenu(R.id.action_cart)
+        assertDisplayed(R.id.lblCartItemName, "Express Lipstick")
     }
 }

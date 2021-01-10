@@ -1,0 +1,5 @@
+<resources>
+	<!-- Other -->
+	<dimen name="avatarSize">44dp</dimen>
+	<dimen name="avatarSizeLarge">120dp</dimen>
+</resources>

@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">ReachProducts</string>
+    <string name="reload">Reload</string>
+    <string name="can_t_connect_to_the_server">Can\'t connect to the server.</string>
+    <string name="products_menu_cart">Cart</string>
+    <string name="price">€%.2f</string>
+    <string name="product_added">%s added</string>
+    <string name="get_free_discount">Buy %s get one free</string>
+    <string name="quantity_discount">Buy minimum %1$d for €%2$.2f each</string>
+    <string name="total_amount">Total amount: €%.2f</string>
 </resources>

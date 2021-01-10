@@ -8,31 +8,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.babestudios.reachproducts.data.network.ReachProductsRepositoryContract
+import com.babestudios.reachproducts.data.res.StringResourceHelperContract
+import com.babestudios.reachproducts.model.CartEntry
+import com.babestudios.reachproducts.model.Discount
 import com.babestudios.reachproducts.model.Product
+import com.babestudios.reachproducts.model.ProductsResponse
 import com.babestudios.reachproducts.navigation.ReachProductsNavigationContract
-import com.babestudios.reachproducts.ui.products.ProductsFragmentDirections
-import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
-import com.github.michaelbull.result.get
+import com.github.michaelbull.result.map
 import kotlinx.coroutines.launch
 
-private const val QUERY_KEY: String = "queryText"
 
 class ReachProductsViewModel @ViewModelInject constructor(
     private val reachProductsRepository: ReachProductsRepositoryContract,
     private val reachProductsNavigation: ReachProductsNavigationContract,
+    private val stringResourceHelper: StringResourceHelperContract,
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    //state not saved
-    private var fullProductList: List<Product> = emptyList()
-
-    //exposed state
-    var productsLiveData = MutableLiveData<Result<List<Product>, Throwable>>()
-    var productLiveData = MutableLiveData<Product?>()
-
-    //transient state (for process death)
-    private var selectedProductId: Long? = null
+    var productsLiveData = MutableLiveData<Result<ProductsResponse, Throwable>>()
+    var cartLiveData = MutableLiveData<List<CartEntry>>()
+    var totalAmountLiveData = MutableLiveData<String>()
 
     fun bindNavController(navController: NavController) {
         reachProductsNavigation.bind(navController)
@@ -45,45 +41,91 @@ class ReachProductsViewModel @ViewModelInject constructor(
     fun loadProducts() {
         viewModelScope.launch {
             reachProductsRepository.getProducts().also {
-                productsLiveData.value = it
-                fullProductList = it.get() ?: emptyList()
-                selectedProductId?.let { id ->
-                    selectedProductId = null
-                    getProductById(id)
-                }
+                productsLiveData.value = it.map { response -> addDiscountStrings(response) }
             }
         }
     }
 
-    fun navigateToProductDetails(id: Long) {
-        ProductsFragmentDirections.actionProductsFragmentToProductDetailsFragment()
-        reachProductsNavigation.mainToProductDetails(id)
+    private fun addDiscountStrings(result: ProductsResponse): ProductsResponse {
+        return ProductsResponse(result.products.map {
+            it.copy(
+                discountText = when (it.discount) {
+                    is Discount.GetFreeDiscount -> {
+                        stringResourceHelper
+                            .getFreeDiscountText(it.discount.quantityPerFreeDiscount)
+                    }
+                    is Discount.QuantityDiscount -> {
+                        stringResourceHelper
+                            .getQuantityDiscountText(
+                                it.discount.minimumQuantity,
+                                it.discount.discountPrice.toDouble()
+                            )
+                    }
+                    else -> null
+                }
+            )
+        })
     }
 
-    fun getProductById(id: Long) {
-        if (fullProductList.isEmpty()) {
-            selectedProductId = id
-            loadProducts()
-        } else {
-            postProductById(id)
+    fun navigateToProductDetails() {
+        reachProductsNavigation.mainToProductDetails()
+        reachProductsNavigation.mainToProductDetails()
+    }
+
+    fun addToCart(product: Product) {
+        val cartEntries = getCartEntries()
+        var found = false
+        val newCartEntries = cartEntries.map {
+            if (it.product == product) {
+                found = true
+                val q = it.quantity
+                CartEntry(product, q + 1)
+            } else {
+                it
+            }
+        }.toMutableList()
+        if (!found) {
+            newCartEntries.add(CartEntry(product, 1))
         }
+        reachProductsRepository.saveCart(newCartEntries)
     }
 
-    private fun postProductById(id: Long) {
-        val product = fullProductList.first { product -> product.id == id }
-        productLiveData.postValue(product)
+    fun loadCart() {
+        val cartEntries = getCartEntries()
+        cartLiveData.postValue(cartEntries)
+        val totalAmount =
+            cartEntries.sumOf { entry -> entry.product.discount.calculateTotalPrice(entry.quantity) }
+        totalAmountLiveData.postValue(stringResourceHelper.getTotalAmountString(totalAmount.toDouble()))
     }
 
-    //endregion
-
-    //region state
-
-    fun getQuery() = savedStateHandle.get<String>(QUERY_KEY) ?: ""
-
-    private fun setQueryText(query: String) = savedStateHandle.set(QUERY_KEY, query).also {
-        applyFilters()
+    private fun getCartEntries(): List<CartEntry> {
+        return reachProductsRepository.getCartContent()
     }
 
-    //endregion
+    fun payOrDeleteCart() {
+        reachProductsRepository.emptyCart()
+        loadCart()
+    }
+
+/*fun getProductById(id: Long) {
+    if (fullProductList.isEmpty()) {
+        selectedProductId = id
+        loadProducts()
+    } else {
+        postProductById(id)
+    }
+}
+
+private fun postProductById(id: Long) {
+    val product = fullProductList.first { product -> product.id == id }
+    productLiveData.postValue(product)
+}*/
+
+//endregion
+
+//region state
+
+
+//endregion
 
 }

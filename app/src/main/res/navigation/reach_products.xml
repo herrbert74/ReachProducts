@@ -3,17 +3,17 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/reach_products.app.xml"
-	app:startDestination="@id/reachProductsFragment">
+	app:startDestination="@id/productsFragment">
 
 	<fragment
-		android:id="@+id/reachProductsFragment"
+		android:id="@+id/productsFragment"
 		android:name="com.babestudios.reachproducts.ui.products.ProductsFragment"
-		android:label="ReachProducts.appFragment"
+		android:label="ProductsFragment"
 		tools:layout="@layout/fragment_products">
 
 		<action
-			android:id="@+id/action_reachProductsFragment_to_reachProductsDetailsFragment"
-			app:destination="@id/reachProductsDetailsFragment"
+			android:id="@+id/action_productsFragment_to_cartFragment"
+			app:destination="@id/cartFragment"
 			app:enterAnim="@anim/right_slide_in"
 			app:exitAnim="@anim/left_slide_out"
 			app:popEnterAnim="@anim/left_slide_in"
@@ -21,10 +21,10 @@
 	</fragment>
 
 	<fragment
-		android:id="@+id/reachProductsDetailsFragment"
-		android:name="com.babestudios.reachproducts.ui.details.ReachProductsDetailsFragment"
-		android:label="ReachProductsDetailsFragment"
-		tools:layout="@layout/fragment_reach_products_details">
+		android:id="@+id/cartFragment"
+		android:name="com.babestudios.reachproducts.ui.cart.CartFragment"
+		android:label="CartFragment"
+		tools:layout="@layout/fragment_cart">
 	</fragment>
 
 </navigation>

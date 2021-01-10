@@ -1,0 +1,22 @@
+{
+  "products": [
+    {
+      "id": "LIPSTICK",
+      "name": "Express Lipstick",
+      "image": "https://i.imgur.com/Uk8dqpo.png",
+      "price": 22
+    },
+    {
+      "id": "EYELINER",
+      "name": "Daily Eyeliner",
+      "image": "https://i.imgur.com/3bY9FTJ.png",
+      "price": 50
+    },
+    {
+      "id": "SHAMPOO",
+      "name": "RSVP Shampoo",
+      "image": "https://i.imgur.com/X7fDF6w.png",
+      "price": 35.5
+    }
+  ]
+}

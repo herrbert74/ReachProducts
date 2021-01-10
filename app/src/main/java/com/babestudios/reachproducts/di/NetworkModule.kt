@@ -5,6 +5,8 @@ import com.babestudios.reachproducts.data.local.DatabaseContract
 import com.babestudios.reachproducts.data.network.ReachProductsRepository
 import com.babestudios.reachproducts.data.network.ReachProductsRepositoryContract
 import com.babestudios.reachproducts.data.network.ReachProductsService
+import com.babestudios.reachproducts.data.network.dto.ProductsResponseDto
+import com.babestudios.reachproducts.model.ProductsResponse
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,34 +21,34 @@ import javax.inject.Singleton
 @Suppress("unused")
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-	@Provides
-	@Singleton
-	internal fun provideReachProductsRetrofit(): Retrofit {
-		val logging = HttpLoggingInterceptor()
-		logging.level = HttpLoggingInterceptor.Level.BODY
+    @Provides
+    @Singleton
+    internal fun provideReachProductsRetrofit(): Retrofit {
+        val logging = HttpLoggingInterceptor()
+        logging.level = HttpLoggingInterceptor.Level.BODY
 
-		val httpClient = OkHttpClient.Builder()
+        val httpClient = OkHttpClient.Builder()
 
-		httpClient.addInterceptor(logging)
-		return Retrofit.Builder()//
-			.baseUrl(BuildConfig.REACH_PRODUCTS_BASE_URL)//
-			.addConverterFactory(GsonConverterFactory.create())//
-			.client(httpClient.build())//
-			.build()
-	}
+        httpClient.addInterceptor(logging)
+        return Retrofit.Builder()//
+            .baseUrl(BuildConfig.REACH_PRODUCTS_BASE_URL)//
+            .addConverterFactory(GsonConverterFactory.create())//
+            .client(httpClient.build())//
+            .build()
+    }
 
-	@Provides
-	@Singleton
-	internal fun provideReachProductsService(retroFit: Retrofit): ReachProductsService {
-		return retroFit.create(ReachProductsService::class.java)
-	}
+    @Provides
+    @Singleton
+    internal fun provideReachProductsService(retroFit: Retrofit): ReachProductsService {
+        return retroFit.create(ReachProductsService::class.java)
+    }
 
-	@Provides
-	@Singleton
-	fun provideReachProductsRepository(
-		reachProductsService: ReachProductsService,
-		database: DatabaseContract
-	): ReachProductsRepositoryContract {
-		return ReachProductsRepository(reachProductsService, database)
-	}
+    @Provides
+    @Singleton
+    fun provideReachProductsRepository(
+        reachProductsService: ReachProductsService,
+        database: DatabaseContract
+    ): ReachProductsRepositoryContract {
+        return ReachProductsRepository(reachProductsService, database)
+    }
 }

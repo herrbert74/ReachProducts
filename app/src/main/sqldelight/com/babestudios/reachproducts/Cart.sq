@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS cart (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    image TEXT NOT NULL,
+    price TEXT NOT NULL,
+    quantity INTEGER NOT NULL
+);
+
+selectAll:
+SELECT * FROM cart
+ORDER BY id ASC;
+
+insertProduct:
+INSERT INTO cart(id, name, image, price, quantity)
+VALUES (?, ?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM cart;

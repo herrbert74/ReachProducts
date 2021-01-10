@@ -9,7 +9,7 @@
 	android:layout_marginEnd="@dimen/screenMargin">
 
 	<ImageView
-		android:id="@+id/ivProductDetailsItem"
+		android:id="@+id/ivCartItem"
 		android:layout_width="@dimen/avatarSize"
 		android:layout_height="@dimen/avatarSize"
 		android:layout_marginTop="@dimen/viewMargin"
@@ -17,21 +17,35 @@
 		android:layout_marginBottom="@dimen/viewMargin"
 		android:contentDescription="@string/app_name"
 		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toStartOf="@+id/lblProductDetailsItemName"
+		app:layout_constraintEnd_toStartOf="@+id/lblCartItemName"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toTopOf="parent"
+		tools:src="@tools:sample/avatars"/>
 
 	<TextView
-		android:id="@+id/lblProductDetailsItemName"
+		android:id="@+id/lblCartItemName"
 		style="@style/TextAppearance.AppCompat.Body1"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/viewMargin"
 		android:layout_marginBottom="@dimen/viewMargin"
 		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toEndOf="@id/ivProductDetailsItem"
+		app:layout_constraintEnd_toStartOf="@+id/lblCartItemQuantity"
+		app:layout_constraintStart_toEndOf="@id/ivCartItem"
 		app:layout_constraintTop_toTopOf="parent"
-		tools:text="" />
+		tools:text="Express Lipstick" />
+
+	<TextView
+		android:id="@id/lblCartItemQuantity"
+		style="@style/TextAppearance.AppCompat.Body1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/viewMargin"
+		android:layout_marginBottom="@dimen/viewMargin"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@id/lblCartItemName"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

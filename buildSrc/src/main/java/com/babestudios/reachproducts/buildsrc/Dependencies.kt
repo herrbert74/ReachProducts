@@ -216,13 +216,20 @@ object Libs {
 		//Provided by AndroidX!
 		const val jUnit = "junit:junit:4.12"
 		const val assertJ = "org.assertj:assertj-core:3.15.0"
-		const val jUnit5 = "org.junit.jupiter:junit-jupiter-api:5.6.0"
 		const val mockK = "io.mockk:mockk:1.9.3"
 		const val mockKAndroidTest = "io.mockk:mockk-android:1.9.3"
 		const val robolectric = "org.robolectric:robolectric:4.3.1"
 		//This is an alternative to Espresso IdlingResource
 		const val conditionWatcher = "com.azimolabs.conditionwatcher:conditionwatcher:0.2"
 		const val barista = "com.schibsted.spain:barista:3.7.0"
+		object JUnit5 {
+			private const val version = "5.7.0"
+			const val jupiterApi = "org.junit.jupiter:junit-jupiter-api:$version"
+			const val jupiterEngine = "org.junit.jupiter:junit-jupiter-engine:$version"
+			const val jupiterParams = "org.junit.jupiter:junit-jupiter-params:$version"
+			const val vintageEngine = "org.junit.jupiter:junit-vintage-engine:$version"
+		}
+
 	}
 
 	object Kotest {

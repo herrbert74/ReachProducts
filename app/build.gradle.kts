@@ -13,6 +13,7 @@ plugins {
 apply {
     plugin("kotlin-android")
     plugin("androidx.navigation.safeargs.kotlin")
+    plugin("de.mannodermaus.android-junit5")
 }
 
 android {
@@ -29,7 +30,11 @@ android {
     }
     buildTypes {
         all {
-            buildConfigField("String", "GAN_BB_BASE_URL", "\"https://breakingbadapi.com/\"")
+            buildConfigField(
+                "String",
+                "REACH_PRODUCTS_BASE_URL",
+                "\"https://apps-tests.s3-eu-west-1.amazonaws.com/\""
+            )
         }
         getByName("release") {
             isDebuggable = false
@@ -139,6 +144,10 @@ dependencies {
     testImplementation(Libs.Test.mockK)
     testImplementation(Libs.Kotlin.Coroutines.test)
     testImplementation(Libs.Kotest.assertions)
+    testImplementation(Libs.Test.JUnit5.jupiterApi)
+    testRuntimeOnly(Libs.Test.JUnit5.jupiterEngine)
+    testImplementation(Libs.Test.JUnit5.jupiterParams)
+
 
     androidTestImplementation(Libs.AndroidX.Test.core)
     androidTestImplementation(Libs.AndroidX.Test.coreKtx)
