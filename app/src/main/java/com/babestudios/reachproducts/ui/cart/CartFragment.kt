@@ -71,6 +71,10 @@ class CartFragment : Fragment() {
 
     private fun initializeUI() {
         (activity as AppCompatActivity).setSupportActionBar(binding.tbCart)
+        val toolBar = (activity as AppCompatActivity).supportActionBar
+        toolBar?.setDisplayHomeAsUpEnabled(true)
+        binding.tbCart.setNavigationOnClickListener { activity?.onBackPressed() }
+
         createSearchRecyclerView()
 
         reachProductsViewModel.cartLiveData.observe(viewLifecycleOwner) { result ->

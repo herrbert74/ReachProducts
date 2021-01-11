@@ -10,6 +10,7 @@
 		android:id="@+id/tbCart"
 		android:layout_width="match_parent"
 		android:layout_height="?attr/actionBarSize"
+		android:theme="@style/AppTheme.AppBarOverlay"
 		android:background="?attr/colorPrimary"
 		app:titleTextColor="@android:color/white" />
 

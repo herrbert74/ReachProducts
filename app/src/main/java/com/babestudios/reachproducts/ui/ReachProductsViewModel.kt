@@ -34,38 +34,36 @@ class ReachProductsViewModel @ViewModelInject constructor(
         reachProductsNavigation.bind(navController)
     }
 
-    fun popBackStack() {
-        reachProductsNavigation.popBackStack()
-    }
-
     fun loadProducts() {
         viewModelScope.launch {
             reachProductsRepository.getProducts().also {
-                productsLiveData.value = it.map { response -> addDiscountStrings(response) }
+                productsLiveData.value = it.map { response -> addDiscountStringsToResponse(response) }
             }
         }
     }
 
-    private fun addDiscountStrings(result: ProductsResponse): ProductsResponse {
+    private fun addDiscountStringsToResponse(result: ProductsResponse): ProductsResponse {
         return ProductsResponse(result.products.map {
-            it.copy(
-                discountText = when (it.discount) {
-                    is Discount.GetFreeDiscount -> {
-                        stringResourceHelper
-                            .getFreeDiscountText(it.discount.quantityPerFreeDiscount)
-                    }
-                    is Discount.QuantityDiscount -> {
-                        stringResourceHelper
-                            .getQuantityDiscountText(
-                                it.discount.minimumQuantity,
-                                it.discount.discountPrice.toDouble()
-                            )
-                    }
-                    else -> null
-                }
-            )
+            it.addDiscountStrings()
         })
     }
+
+    private fun Product.addDiscountStrings() = this.copy(
+        discountText = when (this.discount) {
+            is Discount.GetFreeDiscount -> {
+                stringResourceHelper
+                    .getFreeDiscountText(this.discount.quantityPerFreeDiscount)
+            }
+            is Discount.QuantityDiscount -> {
+                stringResourceHelper
+                    .getQuantityDiscountText(
+                        this.discount.minimumQuantity,
+                        this.discount.discountPrice.toDouble()
+                    )
+            }
+            else -> null
+        }
+    )
 
     fun navigateToProductDetails() {
         reachProductsNavigation.mainToProductDetails()
@@ -91,7 +89,10 @@ class ReachProductsViewModel @ViewModelInject constructor(
     }
 
     fun loadCart() {
-        val cartEntries = getCartEntries()
+        val cartEntries = getCartEntries().map { CartEntry(
+            it.product.addDiscountStrings(),
+            it.quantity
+        ) }
         cartLiveData.postValue(cartEntries)
         val totalAmount =
             cartEntries.sumOf { entry -> entry.product.discount.calculateTotalPrice(entry.quantity) }
@@ -106,26 +107,5 @@ class ReachProductsViewModel @ViewModelInject constructor(
         reachProductsRepository.emptyCart()
         loadCart()
     }
-
-/*fun getProductById(id: Long) {
-    if (fullProductList.isEmpty()) {
-        selectedProductId = id
-        loadProducts()
-    } else {
-        postProductById(id)
-    }
-}
-
-private fun postProductById(id: Long) {
-    val product = fullProductList.first { product -> product.id == id }
-    productLiveData.postValue(product)
-}*/
-
-//endregion
-
-//region state
-
-
-//endregion
 
 }

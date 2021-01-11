@@ -6,14 +6,14 @@ import com.babestudios.reachproducts.ext.loadJson
 import com.babestudios.reachproducts.model.ProductsResponse
 import com.google.gson.Gson
 import io.kotest.matchers.shouldBe
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class MappersTest {
 
 	private var mappedResponse: ProductsResponse = ProductsResponse()
 
-	@Before
+	@BeforeEach
 	fun setup() {
 		val response = "products_response".loadJson()
 		val responseDto = Gson().fromJson(response, ProductsResponseDto::class.java)
